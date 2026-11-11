@@ -42,7 +42,7 @@ Salidas esperadas:
 
 - `55 passed`
 - `envios.py 100 %` en sentencias y ramas
-- Complejidad promedio `A (1,76)`, máximo `3`
+- Complejidad promedio `A (1,81)`, máximo `3` (27 bloques en v2.1.0)
 - `7900`, `9800`, `12600`
 
 ## 3. Preguntas frecuentes

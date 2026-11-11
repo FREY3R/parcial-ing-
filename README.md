@@ -49,7 +49,7 @@ Reglas destacadas:
 | Pruebas | 36 (14 pasan) | 43 (43 pasan) | **55 (55 pasan)** |
 | Cobertura | 96 % sentencias | 100 % sentencias y ramas | **100 %** |
 | Complejidad máx. por bloque | 15 | 3 | 3 |
-| Complejidad promedio | 15,0 | 1,76 | 1,76 |
+| Complejidad promedio | 15,0 | 1,76 | 1,81 |
 
 ## Estructura del repositorio
 
