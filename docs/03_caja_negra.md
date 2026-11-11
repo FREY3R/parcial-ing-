@@ -134,3 +134,48 @@ Condiciones: **B impar** → se aplican ambos descuentos (cliente y luego cupón
   descuentos, cambiando las filas 2, 4, 6, 8, 10 y 12.
 - El cupón inexistente no aparece en la tabla porque, con **F impar**, es un
   error y no una combinación válida.
+
+---
+
+## 4. Matriz de casos de prueba (30 casos)
+
+| ID | Req. | Peso | Zona | Cliente | Día | Cupón | Resultado esperado | Técnica |
+|----|------|------|------|---------|-----|-------|--------------------|---------|
+| C01 | R3 | 2 | urbana | ninguno | 3 | — | $6.000 | PE tramo 1 |
+| C02 | R3 | 3 | urbana | ninguno | 3 | — | $6.000 | VL L1 (incluido) |
+| C03 | R3 | 4 | urbana | ninguno | 3 | — | $9.000 | PE tramo 2 |
+| C04 | R3 | 10 | urbana | ninguno | 3 | — | $9.000 | VL L2 (incluido) |
+| C05 | R3 | 11 | urbana | ninguno | 3 | — | $9.800 | VL L2+1 |
+| C06 | R3 | 12,5 | urbana | ninguno | 3 | — | $11.000 | PE tramo 3 proporcional |
+| C07 | R4, R8 | 5 | rural | ninguno | 3 | — | $10.400 | PE zona + half-up |
+| C08 | R4 | 5 | nacional | ninguno | 3 | — | $12.600 | PE zona |
+| C09 | R4 | 5 | urbana | ninguno | 3 | — | $9.000 | PE zona sin recargo |
+| C10 | R6, R8 | 5 | urbana | frecuente | 3 | — | $8.600 | PE cliente + half-up |
+| C11 | R6 | 5 | urbana | vip | 3 | — | $7.700 | PE cliente |
+| C12 | R6 | 5 | urbana | ninguno | 3 | ENVIO10 | $8.100 | PE cupón |
+| C13 | R6 | 5 | urbana | vip | 3 | ENVIO10 | $6.900 | TD ambos (B impar) |
+| C14 | R6 | 5 | urbana | frecuente | 3 | ENVIO10 | $7.700 | TD ambos (B impar) |
+| C15 | R5 | 5 | urbana | ninguno | 6 | — | $11.000 | VL sábado |
+| C16 | R5 | 5 | urbana | ninguno | 7 | — | $11.000 | VL domingo |
+| C17 | R5, E | 5 | urbana | vip | 6 | — | $9.700 | TD orden finde |
+| C18 | R5, E | 5 | urbana | vip | 6 | ENVIO10 | $8.900 | TD orden + ambos |
+| C19 | R7 | 5 | urbana | ninguno | 3 | OTRO | `ValueError` | PE cupón inválido |
+| C20 | R7 | 5 | urbana | ninguno | 3 | ENVIO20 | `ValueError` | PE cupón inválido |
+| C21 | R1 | 0 | urbana | ninguno | 3 | — | `ValueError` | VL peso 0 |
+| C22 | R1 | −1 | urbana | ninguno | 3 | — | `ValueError` | PE peso inválido |
+| C23 | R1 | 51 | urbana | ninguno | 3 | — | `ValueError` | VL PMAX+1 |
+| C24 | R1, R3 | 50 | urbana | ninguno | 3 | — | $41.000 | VL PMAX válido |
+| C25 | R2 | 5 | express | ninguno | 3 | — | `ValueError` | PE zona inválida |
+| C26 | R2 | 5 | Urbana | ninguno | 3 | — | `ValueError` | PE capitalización |
+| C27 | R2 | 5 | urbana | ninguno | 0 | — | `ValueError` | VL día 0 |
+| C28 | R2 | 5 | urbana | ninguno | 8 | — | `ValueError` | VL día 8 |
+| C29 | R2 | 5 | urbana | ninguno | 6,5 | — | `ValueError` | Día no entero |
+| C30 | R8 | 2 | urbana | vip | 3 | ENVIO10 | $5.000 | Mínimo |
+| C31 | R3, R8 | 10,1 | urbana | ninguno | 3 | — | $9.100 | Proporcional + float |
+| C32 | R5, R6 | 2 | rural | frecuente | 6 | ENVIO10 | $7.900 | Integración |
+| C33 | R3, R4 | 10,1 | nacional | ninguno | 3 | — | $12.700 | Integración |
+
+> **Casos que afloran defectos reales del heredado:** C15 y C16 (sábado/domingo
+> por `d > 6`), C17 y C18 (orden del fin de semana), C19 y C20 (cupón
+> inexistente), C25–C28 (validaciones), C07/C10/C13 (redondeo half-up), C31
+> (truncamiento y `float`).
