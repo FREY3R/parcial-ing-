@@ -103,3 +103,34 @@ inclusivos según R3 y R1.
 | cupón `None` | válido, sin descuento |
 | cupón `ENVIO10` | válido, −10 % |
 | cupón `OTRO` / `ENVIO20` | `ValueError` (F impar) |
+
+---
+
+## 3. Tabla de decisión
+
+Condiciones: **B impar** → se aplican ambos descuentos (cliente y luego cupón);
+**E impar** → el recargo de fin de semana se suma **después** de los descuentos.
+
+| # | Cliente | Cupón | ¿Finde? | Secuencia aplicada | Ejemplo (base $9.000) |
+|---|---------|-------|---------|--------------------|-----------------------|
+| 1 | ninguno | None | No | base | 9000 |
+| 2 | ninguno | None | Sí | base + 2000 | 11000 |
+| 3 | ninguno | ENVIO10 | No | base · 0,90 | 8100 |
+| 4 | ninguno | ENVIO10 | Sí | base · 0,90 + 2000 | 10100 |
+| 5 | frecuente | None | No | base · 0,95 | 8550 → 8600 |
+| 6 | frecuente | None | Sí | base · 0,95 + 2000 | 10550 → 10600 |
+| 7 | frecuente | ENVIO10 | No | base · 0,95 · 0,90 | 7695 → 7700 |
+| 8 | frecuente | ENVIO10 | Sí | base · 0,95 · 0,90 + 2000 | 9695 → 9700 |
+| 9 | vip | None | No | base · 0,85 | 7650 → 7700 |
+| 10 | vip | None | Sí | base · 0,85 + 2000 | 9650 → 9700 |
+| 11 | vip | ENVIO10 | No | base · 0,85 · 0,90 | 6885 → 6900 |
+| 12 | vip | ENVIO10 | Sí | base · 0,85 · 0,90 + 2000 | 8885 → 8900 |
+
+**Lectura clave de la tabla:**
+
+- Si **B fuera par** (no es el caso), las filas 7, 8, 11 y 12 aplicarían solo el
+  mayor descuento (VIP 15 %), no ambos.
+- Si **E fuera par** (no es el caso), el `+2000` se aplicaría **antes** de los
+  descuentos, cambiando las filas 2, 4, 6, 8, 10 y 12.
+- El cupón inexistente no aparece en la tabla porque, con **F impar**, es un
+  error y no una combinación válida.
