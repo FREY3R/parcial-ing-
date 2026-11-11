@@ -1,4 +1,4 @@
-"""Cálculo de costos de envío — v2.0.0.
+"""Cálculo de costos de envío — v2.1.0.
 
 Especificación R1–R8 particularizada para el código estudiantil 0182410093.
 
@@ -8,6 +8,7 @@ Diseño:
 - Patrón Estrategia para zonas y para descuentos.
 - Aritmética Decimal de extremo a extremo.
 - Sin parámetro `flag` ni `CONFIG` global (cambio incompatible → v2.0.0).
+- CAMBIO=1: cliente empresarial (12 %) y sin recargo de zona si peso > L2.
 """
 
 from __future__ import annotations
@@ -26,8 +27,12 @@ RECARGO_RURAL: Decimal = Decimal("0.15")
 RECARGO_NACIONAL: Decimal = Decimal("0.40")
 DESC_FRECUENTE: Decimal = Decimal("0.05")
 DESC_VIP: Decimal = Decimal("0.15")
+DESC_EMPRESARIAL: Decimal = Decimal("0.12")
 DESC_CUPON: Decimal = Decimal("0.10")
 RECARGO_FINDE: Decimal = Decimal("2000")
+
+# Cambio solicitado (Parte 8): 1 = activo.
+CAMBIO: int = 1
 
 COSTO_TRAMO_1: Decimal = Decimal("6000")
 COSTO_TRAMO_2: Decimal = Decimal("9000")
@@ -120,10 +125,16 @@ class DescuentoVip:
         return costo * (Decimal("1") - DESC_VIP)
 
 
+class DescuentoEmpresarial:
+    def aplicar(self, costo: Decimal) -> Decimal:
+        return costo * (Decimal("1") - DESC_EMPRESARIAL)
+
+
 ESTRATEGIAS_CLIENTE: dict[str, EstrategiaDescuento] = {
     "ninguno": SinDescuento(),
     "frecuente": DescuentoFrecuente(),
     "vip": DescuentoVip(),
+    "empresarial": DescuentoEmpresarial(),
 }
 
 
@@ -168,7 +179,7 @@ def calc(
     Args:
         peso: peso en kg; debe cumplir ``0 < peso <= 50``.
         zona: ``"urbana"``, ``"rural"`` o ``"nacional"``.
-        cliente: ``"ninguno"``, ``"frecuente"`` o ``"vip"``.
+        cliente: ``"ninguno"``, ``"frecuente"``, ``"vip"`` o ``"empresarial"``.
         dia: entero de 1 a 7 (6 = sábado, 7 = domingo).
         cupon: ``None`` o ``"ENVIO10"``; cualquier otro valor es error.
 
@@ -185,7 +196,8 @@ def calc(
     validar_cupon(cupon)
 
     costo = costo_base(peso_dec)
-    costo = ESTRATEGIAS_ZONA[zona].recargo(costo)
+    if not (CAMBIO == 1 and peso_dec > L2):
+        costo = ESTRATEGIAS_ZONA[zona].recargo(costo)
     costo = aplicar_descuentos(costo, cliente, cupon)
 
     if dia in DIAS_FIN_DE_SEMANA:
