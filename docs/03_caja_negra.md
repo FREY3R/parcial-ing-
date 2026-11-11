@@ -54,3 +54,52 @@ los valores esperados se obtuvieron con la calculadora independiente
 | K-V1 | `None` (ausente) | válida | None |
 | K-V2 | `ENVIO10` | válida (10 %) | ENVIO10 |
 | K-I1 | otro texto | inválida (F impar → error) | `OTRO`, `ENVIO20` |
+
+---
+
+## 2. Valores límite
+
+Con **D par**, el tramo 1 **incluye** `L1 = 3`. Con L2 y PMAX los límites son
+inclusivos según R3 y R1.
+
+### 2.1 Peso
+
+| Punto | Valor | Esperado | Motivo |
+|-------|-------|----------|--------|
+| Bajo 0 | −0,01 | `ValueError` | fuera de rango |
+| Límite 0 | 0 | `ValueError` | 0 no es válido |
+| Justo sobre 0 | 0,01 | $6.000 | tramo 1 |
+| Justo bajo L1 | 2,99 | $6.000 | tramo 1 |
+| **L1 exacto** | **3** | **$6.000** | **incluido por D par** |
+| Justo sobre L1 | 3,01 | $9.000 | tramo 2 |
+| Justo bajo L2 | 9,99 | $9.000 | tramo 2 |
+| **L2 exacto** | **10** | **$9.000** | **incluido** |
+| Justo sobre L2 | 10,01 | $9.000 + 0,01·800 = $9.008 → $9.000 | tramo 3 |
+| Justo bajo PMAX | 49,99 | $9.000 + 39,99·800 = $40.992 → $41.000 | tramo 3 |
+| **PMAX exacto** | **50** | **$41.000** | **válido** |
+| Sobre PMAX | 50,01 | `ValueError` | fuera de rango |
+
+> El caso 10,01 es especialmente útil: el valor intermedio $9.008 redondea a
+> $9.000, pero con aritmética `float` y truncamiento el heredado puede devolver
+> otro valor. Se prueba con 10,1 en C31 para hacerlo evidente.
+
+### 2.2 Día
+
+| Valor | Esperado | Motivo |
+|-------|----------|--------|
+| 0 | `ValueError` | fuera de [1,7] |
+| 1 | sin recargo | lunes |
+| 5 | sin recargo | viernes |
+| **6** | **+$2.000** | **sábado (R5)** |
+| **7** | **+$2.000** | **domingo** |
+| 8 | `ValueError` | fuera de [1,7] |
+
+### 2.3 Zona y cupón
+
+| Entrada | Esperado |
+|---------|----------|
+| `urbana` / `rural` / `nacional` | válidas |
+| `express`, `Urbana`, `""` | `ValueError` |
+| cupón `None` | válido, sin descuento |
+| cupón `ENVIO10` | válido, −10 % |
+| cupón `OTRO` / `ENVIO20` | `ValueError` (F impar) |
