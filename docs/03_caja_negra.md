@@ -137,7 +137,7 @@ Condiciones: **B impar** → se aplican ambos descuentos (cliente y luego cupón
 
 ---
 
-## 4. Matriz de casos de prueba (30 casos)
+## 4. Matriz de casos de prueba (33 casos)
 
 | ID | Req. | Peso | Zona | Cliente | Día | Cupón | Resultado esperado | Técnica |
 |----|------|------|------|---------|-----|-------|--------------------|---------|
@@ -174,6 +174,10 @@ Condiciones: **B impar** → se aplican ambos descuentos (cliente y luego cupón
 | C31 | R3, R8 | 10,1 | urbana | ninguno | 3 | — | $9.100 | Proporcional + float |
 | C32 | R5, R6 | 2 | rural | frecuente | 6 | ENVIO10 | $7.900 | Integración |
 | C33 | R3, R4 | 10,1 | nacional | ninguno | 3 | — | $12.700 | Integración |
+
+> **Nota (Parte 8):** con `CAMBIO=1`, C33 pasa a **$9.100** porque el peso
+> supera `L2` y no se cobra recargo de zona. El resto de la matriz conserva sus
+> valores. Ver `docs/08_cambio.md`.
 
 > **Casos que afloran defectos reales del heredado:** C15 y C16 (sábado/domingo
 > por `d > 6`), C17 y C18 (orden del fin de semana), C19 y C20 (cupón
