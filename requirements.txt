@@ -1,0 +1,7 @@
+pytest==9.2.0
+pytest-cov==7.1.0
+coverage==7.17.2
+matplotlib==3.11.2
+Pillow==13.0.0
+reportlab==5.1.0
+radon==6.0.1
