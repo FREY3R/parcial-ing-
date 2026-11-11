@@ -179,3 +179,97 @@ Condiciones: **B impar** → se aplican ambos descuentos (cliente y luego cupón
 > por `d > 6`), C17 y C18 (orden del fin de semana), C19 y C20 (cupón
 > inexistente), C25–C28 (validaciones), C07/C10/C13 (redondeo half-up), C31
 > (truncamiento y `float`).
+
+---
+
+## 5. Cálculo paso a paso (7 casos)
+
+Formato idéntico al ejemplo oficial: se parte del tramo, se aplican recargos y
+descuentos en el orden de la especificación, luego mínimo y redondeo half-up.
+
+### C07 · peso 5, rural, ninguno, día 3, sin cupón
+
+```
+Tramo: 5 > 3 y 5 ≤ 10        → tramo 2 = 9000
+Rural +15 %                   → 9000 · 1,15 = 10350
+Descuentos                    → 10350 (ninguno)
+Fin de semana                 → no aplica (día 3)
+Mínimo 5000                   → 10350
+Redondeo half-up              → 10350/100 = 103,5 → 104 → 10400
+```
+
+### C10 · peso 5, urbana, frecuente, día 3, sin cupón
+
+```
+Tramo                         → 9000
+Zona urbana                   → 9000
+Frecuente −5 %                → 9000 · 0,95 = 8550
+Fin de semana                 → no aplica
+Mínimo                        → 8550
+Redondeo half-up              → 85,5 → 86 → 8600
+```
+
+### C13 · peso 5, urbana, vip, día 3, ENVIO10 (B impar → ambos)
+
+```
+Tramo                         → 9000
+Zona urbana                   → 9000
+VIP −15 %                     → 9000 · 0,85 = 7650
+Cupón −10 %                   → 7650 · 0,90 = 6885
+Fin de semana                 → no aplica
+Mínimo                        → 6885
+Redondeo half-up              → 68,85 → 69 → 6900
+```
+
+### C17 · peso 5, urbana, vip, día 6 (E impar → finde después)
+
+```
+Tramo                         → 9000
+Zona urbana                   → 9000
+VIP −15 %                     → 9000 · 0,85 = 7650
+Fin de semana (después) +2000 → 7650 + 2000 = 9650
+Mínimo                        → 9650
+Redondeo half-up              → 96,5 → 97 → 9700
+```
+
+> Si el finde se aplicara antes (como hace el heredado) daría
+> `(9000 + 2000) · 0,85 = 9350 → 9400`, distinto de $9.700.
+
+### C30 · peso 2, urbana, vip, día 3, ENVIO10 (mínimo)
+
+```
+Tramo (2 ≤ 3)                 → 6000
+Zona urbana                   → 6000
+VIP −15 %                     → 6000 · 0,85 = 5100
+Cupón −10 %                   → 5100 · 0,90 = 4590
+Fin de semana                 → no aplica
+Mínimo 5000                   → 4590 < 5000 → 5000
+Redondeo                      → 5000
+```
+
+### C31 · peso 10,1, urbana, ninguno, día 3 (proporcional + float)
+
+```
+Tramo: 10,1 > 10              → 9000 + (10,1 − 10)·800
+                              → 9000 + 0,1·800 = 9000 + 80 = 9080
+Zona urbana                   → 9080
+Descuentos                    → 9080
+Fin de semana                 → no aplica
+Mínimo                        → 9080
+Redondeo half-up              → 90,8 → 91 → 9100
+```
+
+> Con `float`, `10.1 - 10 = 0.09999999999999964`; el heredado obtiene
+> `9079.99…` y trunca a `9000`. Esperado correcto: **$9.100**.
+
+### C32 · peso 2, rural, frecuente, día 6, ENVIO10 (integración)
+
+```
+Tramo (2 ≤ 3)                 → 6000
+Rural +15 %                   → 6000 · 1,15 = 6900
+Frecuente −5 %                → 6900 · 0,95 = 6555
+Cupón −10 %                   → 6555 · 0,90 = 5899,5
+Fin de semana (después) +2000 → 5899,5 + 2000 = 7899,5
+Mínimo                        → 7899,5
+Redondeo half-up              → 78,995 → 79 → 7900
+```
