@@ -1,0 +1,33 @@
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribución / empaquetado
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Pruebas y cobertura
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Editores / sistema
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Temporales
+*.log
+*.tmp
