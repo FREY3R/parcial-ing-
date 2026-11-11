@@ -13,7 +13,7 @@ CONFIG = {
 
 def calc(p, z, c, d, cup=None, flag=False):
     if p <= 0 or p > 50:
-        raise ValueError("peso invalido")
+        raise ValueError("peso inválido")
     if z not in ("urbana", "rural", "nacional"):
         raise ValueError("zona inválida")
     if not isinstance(d, int) or not (1 <= d <= 7):
