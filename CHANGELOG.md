@@ -5,6 +5,19 @@ y versionado [SemVer](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-11-11
+
+### Añadido
+- Constante `CAMBIO = 1` y descuento `DESC_EMPRESARIAL = 12 %`.
+- Estrategia `DescuentoEmpresarial` y cliente `"empresarial"`.
+- Exención del recargo de zona cuando `peso > L2` con `CAMBIO = 1`.
+- Casos C34–C42 (válidos) y C43–C44 (errores) en la suite.
+- Documentación del cambio en `docs/08_cambio.md` y `docs/notas_v2.1.0.md`.
+
+### Cambiado
+- C33: peso 10,1 en zona nacional pasa de $12.700 a $9.100 (sin recargo de zona).
+- Total de pruebas: 43 → **55**, todas en verde.
+
 ## [2.0.0] - 2026-11-11
 
 ### Añadido

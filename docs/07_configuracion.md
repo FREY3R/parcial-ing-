@@ -22,9 +22,9 @@ Derivados de los últimos seis dígitos del código `0182410093` → `4 1 0 0 9 
 
 | Símbolo | Valor | Uso | Constante en v2.0.0 |
 |---------|-------|-----|---------------------|
-| `PMAX` | 50 kg | Peso máximo permitido | `PESO_MAXIMO` |
-| `L1` | 3 kg | Límite del tramo 1 | `LIMITE_TRAMO1` |
-| `L2` | 10 kg | Límite del tramo 2 | `LIMITE_TRAMO2` |
+| `PMAX` | 50 kg | Peso máximo permitido | `PMAX` |
+| `L1` | 3 kg | Límite del tramo 1 | `L1` |
+| `L2` | 10 kg | Límite del tramo 2 | `L2` |
 | `RR` | 15 % | Recargo zona rural | `RECARGO_RURAL` |
 | `RN` | 40 % | Recargo zona nacional | `RECARGO_NACIONAL` |
 | `V` | 15 % | Descuento cliente VIP | `DESC_VIP` |
@@ -35,10 +35,10 @@ Tarifas y reglas fijas (no derivadas del código, pero configurables):
 
 | Constante | Valor | Uso |
 |-----------|-------|-----|
-| `TARIFA_TRAMO1` | 6000 | Costo base si `peso ≤ L1` |
-| `TARIFA_TRAMO2` | 9000 | Costo base si `L1 < peso ≤ L2` |
-| `TARIFA_KG_ADICIONAL` | 800 | Costo por kg sobre `L2` |
-| `MINIMO` | 5000 | Cobro mínimo |
+| `COSTO_TRAMO_1` | 6000 | Costo base si `peso ≤ L1` |
+| `COSTO_TRAMO_2` | 9000 | Costo base si `L1 < peso ≤ L2` |
+| `COSTO_POR_KG_EXTRA` | 800 | Costo por kg sobre `L2` |
+| `COSTO_MINIMO` | 5000 | Cobro mínimo |
 | `PASO_REDONDEO` | 100 | Múltiplo de redondeo |
 | `DESC_FRECUENTE` | 0,05 | Descuento cliente frecuente |
 | `DESC_CUPON` | 0,10 | Descuento cupón `ENVIO10` |
@@ -48,14 +48,14 @@ Tarifas y reglas fijas (no derivadas del código, pero configurables):
 
 | Parámetro | v1.0.0 (heredado) | v2.0.0 (refactor) | v2.1.0 (cambio) |
 |-----------|-------------------|-------------------|-----------------|
-| `PMAX` | 50 (literal en `if`) | `PESO_MAXIMO = 50` | `PESO_MAXIMO = 50` |
+| `PMAX` | 50 (literal en `if`) | `PMAX = 50` | `PMAX = 50` |
 | `L1` / `L2` | `CONFIG["L1"]` / `CONFIG["L2"]` | constantes | constantes |
 | `RR` / `RN` | `CONFIG[...]` | constantes | constantes |
 | `V` | `CONFIG["DESC_VIP"]` | `DESC_VIP` | `DESC_VIP` |
 | `S` | `CONFIG["RECARGO_FINDE"]` | `RECARGO_FINDE` | `RECARGO_FINDE` |
 | Descuento frecuente | literal `0.05` | `DESC_FRECUENTE` | `DESC_FRECUENTE` |
 | Descuento cupón | literal `0.10` | `DESC_CUPON` | `DESC_CUPON` |
-| Mínimo | literal `5000` | `MINIMO` | `MINIMO` |
+| Mínimo | literal `5000` | `COSTO_MINIMO` | `COSTO_MINIMO` |
 | Redondeo | `int(t/100)*100` | `PASO_REDONDEO` + half-up | igual |
 | `CAMBIO` | no existe | no aplica | `CAMBIO = 1` |
 | Cliente empresarial | no existe | no existe | 12 % y sin recargo de zona si `peso > L2` |
@@ -79,7 +79,7 @@ conjuntos es un error de entrada y debe lanzar `ErrorEnvio`.
 ## 6. Verificación de la configuración
 
 ```powershell
-python -c "import envios; print(envios.PESO_MAXIMO, envios.LIMITE_TRAMO1, envios.LIMITE_TRAMO2)"
+python -c "import envios; print(envios.PMAX, envios.L1, envios.L2)"
 python -m pytest -q
 ```
 
