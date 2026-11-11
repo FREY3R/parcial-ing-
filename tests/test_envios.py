@@ -56,3 +56,42 @@ CASOS_VALIDOS = [
 )
 def test_costos_validos(cid, peso, zona, cliente, dia, cupon, esperado):
     assert calc(peso, zona, cliente, dia, cupon) == esperado
+
+
+# (id, peso, zona, cliente, dia, cupon, mensaje esperado)
+CASOS_ERROR = [
+    ("C19", 5, "urbana", "ninguno", 3, "OTRO", "cupón inválido"),
+    ("C20", 5, "urbana", "ninguno", 3, "ENVIO20", "cupón inválido"),
+    ("C21", 0, "urbana", "ninguno", 3, None, "peso inválido"),
+    ("C22", -1, "urbana", "ninguno", 3, None, "peso inválido"),
+    ("C23", 51, "urbana", "ninguno", 3, None, "peso inválido"),
+    ("C25", 5, "express", "ninguno", 3, None, "zona inválida"),
+    ("C26", 5, "Urbana", "ninguno", 3, None, "zona inválida"),
+    ("C27", 5, "urbana", "ninguno", 0, None, "día inválido"),
+    ("C28", 5, "urbana", "ninguno", 8, None, "día inválido"),
+    ("C29", 5, "urbana", "ninguno", 6.5, None, "día inválido"),
+]
+
+
+@pytest.mark.parametrize(
+    "cid,peso,zona,cliente,dia,cupon,mensaje",
+    CASOS_ERROR,
+    ids=[c[0] for c in CASOS_ERROR],
+)
+def test_entradas_invalidas(cid, peso, zona, cliente, dia, cupon, mensaje):
+    with pytest.raises(ValueError, match=mensaje):
+        calc(peso, zona, cliente, dia, cupon)
+
+
+def test_minimo_5000():
+    assert calc(2, "urbana", "vip", 3, "ENVIO10") == 5000
+
+
+def test_redondeo_half_up_sube():
+    assert calc(5, "rural", "ninguno", 3, None) == 10400
+    assert calc(5, "urbana", "frecuente", 3, None) == 8600
+
+
+def test_sabado_y_domingo():
+    assert calc(5, "urbana", "ninguno", 6, None) == 11000
+    assert calc(5, "urbana", "ninguno", 7, None) == 11000
