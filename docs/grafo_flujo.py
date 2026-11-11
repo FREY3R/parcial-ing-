@@ -1,4 +1,9 @@
-"""Genera el grafo de flujo de calc (v1.0.0) como PNG con matplotlib."""
+"""Genera el grafo de flujo de calc (v1.0.0) como PNG con matplotlib.
+
+P1 se descompone en P1a (p<=0) y P1b (p>50) para contar el cortocircuito del
+`or` como predicado independiente. Así N=30, E=43 y M=E-N+2=15, que coincide
+con el conteo de nodos predicado (14+1) y con radon.
+"""
 
 import matplotlib
 
@@ -35,54 +40,55 @@ def flecha(ax, a, b, etiqueta=None):
                 fontsize=6, color="#555555")
 
 
-fig, ax = plt.subplots(figsize=(12, 18))
+fig, ax = plt.subplots(figsize=(12, 19))
 ax.set_xlim(-2.5, 9.5)
-ax.set_ylim(25, -1.2)
+ax.set_ylim(26, -1.2)
 ax.axis("off")
 
 XM, XS, XS2 = 0.0, 3.4, 6.6
 pos = {
-    "S": (XM, 0.0), "P1": (XM, 1.7), "R": (XS, 1.7),
-    "P2": (XM, 3.4), "T1": (XS, 3.4),
-    "P3": (XM, 5.1), "T2": (XS, 5.1), "T3": (XS2, 5.1),
-    "P4": (XM, 6.8), "Z1": (XS, 6.8),
-    "P5": (XM, 8.5), "Z2": (XS, 8.5),
-    "P6": (XM, 10.2), "Z3": (XS, 10.2),
+    "S": (XM, 0.0), "P1a": (XM, 1.7), "P1b": (XM, 2.55), "R": (XS, 2.1),
+    "P2": (XM, 3.9), "T1": (XS, 3.9),
+    "P3": (XM, 5.5), "T2": (XS, 5.5), "T3": (XS2, 5.5),
+    "P4": (XM, 7.1), "Z1": (XS, 7.1),
+    "P5": (XM, 8.7), "Z2": (XS, 8.7),
+    "P6": (XM, 10.3), "Z3": (XS, 10.3),
     "P7": (XM, 11.9), "W1": (XS, 11.9),
-    "P8": (XM, 13.6), "F1": (XS, 13.6),
-    "P9": (XM, 15.3), "F2": (XS, 15.3),
-    "P10": (XM, 17.0), "P11": (XS, 17.0), "K1": (XS2, 17.0),
-    "P12": (XM, 18.7), "M1": (XS, 18.7),
-    "P13": (XM, 20.4), "I1": (XS, 20.4),
-    "RET": (XM, 22.1), "End": (XM, 23.8),
+    "P8": (XM, 13.5), "F1": (XS, 13.5),
+    "P9": (XM, 15.1), "F2": (XS, 15.1),
+    "P10": (XM, 16.7), "P11": (XS, 16.7), "K1": (XS2, 16.7),
+    "P12": (XM, 18.3), "M1": (XS, 18.3),
+    "P13": (XM, 19.9), "I1": (XS, 19.9),
+    "RET": (XM, 21.5), "End": (XM, 23.1),
 }
 
 textos = {
-    "S": "1  S: def calc", "P1": "2  P1: p<=0 or p>50", "R": "3  raise ValueError",
-    "P2": "4  P2: p<=L1", "T1": "5  t=6000",
-    "P3": "6  P3: p<=L2", "T2": "7  t=9000", "T3": "8  t=9000+(p-L2)*800",
-    "P4": "9  P4: z==urbana", "Z1": "10  t=t",
-    "P5": "11  P5: z==rural", "Z2": "12  t+=t*RR",
-    "P6": "13  P6: z==nacional", "Z3": "14  t+=t*RN",
-    "P7": "15  P7: d>6", "W1": "16  t+=S",
-    "P8": "17  P8: c==frecuente", "F1": "18  t-=t*0.05",
-    "P9": "19  P9: c==vip", "F2": "20  t-=t*V",
-    "P10": "21  P10: cup!=None", "P11": "22  P11: cup==ENVIO10", "K1": "23  t-=t*0.10",
-    "P12": "24  P12: t<5000", "M1": "25  t=5000",
-    "P13": "26  P13: flag", "I1": "27  print",
-    "RET": "28  return int(t/100)*100", "End": "29  End",
+    "S": "1  S: def calc",
+    "P1a": "2  P1a: p<=0", "P1b": "3  P1b: p>50", "R": "4  raise ValueError",
+    "P2": "5  P2: p<=L1", "T1": "6  t=6000",
+    "P3": "7  P3: p<=L2", "T2": "8  t=9000", "T3": "9  t=9000+(p-L2)*800",
+    "P4": "10  P4: z==urbana", "Z1": "11  t=t",
+    "P5": "12  P5: z==rural", "Z2": "13  t+=t*RR",
+    "P6": "14  P6: z==nacional", "Z3": "15  t+=t*RN",
+    "P7": "16  P7: d>6", "W1": "17  t+=S",
+    "P8": "18  P8: c==frecuente", "F1": "19  t-=t*0.05",
+    "P9": "20  P9: c==vip", "F2": "21  t-=t*V",
+    "P10": "22  P10: cup!=None", "P11": "23  P11: cup==ENVIO10", "K1": "24  t-=t*0.10",
+    "P12": "25  P12: t<5000", "M1": "26  t=5000",
+    "P13": "27  P13: flag", "I1": "28  print",
+    "RET": "29  return int(t/100)*100", "End": "30  End",
 }
-rombos = {"P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11", "P12", "P13"}
+rombos = {"P1a", "P1b", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11", "P12", "P13"}
 
 for nid, (x, y) in pos.items():
     ancho = 2.0 if nid in rombos else 2.4
     caja(ax, x, y, textos[nid], ancho=ancho, rombo=nid in rombos)
 
 aristas = [
-    ("S", "P1", None), ("P1", "R", "inválido"), ("R", "End", None),
-    ("P1", "P2", "válido"), ("P2", "T1", "sí"), ("T1", "P4", None),
-    ("P2", "P3", "no"), ("P3", "T2", "sí"), ("T2", "P4", None),
-    ("P3", "T3", "no"), ("T3", "P4", None),
+    ("S", "P1a", None), ("P1a", "R", "sí"), ("P1a", "P1b", "no"),
+    ("P1b", "R", "sí"), ("P1b", "P2", "no"), ("R", "End", None),
+    ("P2", "T1", "sí"), ("T1", "P4", None), ("P2", "P3", "no"),
+    ("P3", "T2", "sí"), ("T2", "P4", None), ("P3", "T3", "no"), ("T3", "P4", None),
     ("P4", "Z1", "sí"), ("Z1", "P7", None), ("P4", "P5", "no"),
     ("P5", "Z2", "sí"), ("Z2", "P7", None), ("P5", "P6", "no"),
     ("P6", "Z3", "sí"), ("Z3", "P7", None), ("P6", "P7", "no"),
@@ -98,7 +104,7 @@ aristas = [
 for a, b, et in aristas:
     flecha(ax, pos[a], pos[b], et)
 
-ax.set_title("Grafo de flujo de calc() v1.0.0 — N=29, E=41, M=14", fontsize=11)
+ax.set_title("Grafo de flujo de calc() v1.0.0 — N=30, E=43, M=15", fontsize=11)
 plt.tight_layout()
 plt.savefig("evidence/grafo_flujo.png", dpi=150, bbox_inches="tight")
 print("PNG generado: evidence/grafo_flujo.png")
