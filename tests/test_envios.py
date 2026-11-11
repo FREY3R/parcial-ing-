@@ -29,6 +29,23 @@ CASOS_VALIDOS = [
     ("C07", 5, "rural", "ninguno", 3, None, 10400),      # 10350 -> half-up
     ("C08", 5, "nacional", "ninguno", 3, None, 12600),
     ("C09", 5, "urbana", "ninguno", 3, None, 9000),
+    # --- Descuentos (R6, B impar: ambos) ---
+    ("C10", 5, "urbana", "frecuente", 3, None, 8600),      # 8550 -> half-up
+    ("C11", 5, "urbana", "vip", 3, None, 7700),            # 7650 -> half-up
+    ("C12", 5, "urbana", "ninguno", 3, "ENVIO10", 8100),
+    ("C13", 5, "urbana", "vip", 3, "ENVIO10", 6900),       # 6885
+    ("C14", 5, "urbana", "frecuente", 3, "ENVIO10", 7700), # 7695
+    # --- Fin de semana (R5, E impar: después de descuentos) ---
+    ("C15", 5, "urbana", "ninguno", 6, None, 11000),       # sábado
+    ("C16", 5, "urbana", "ninguno", 7, None, 11000),       # domingo
+    ("C17", 5, "urbana", "vip", 6, None, 9700),            # 7650+2000
+    ("C18", 5, "urbana", "vip", 6, "ENVIO10", 8900),       # 6885+2000
+    # --- Límite superior y casos integradores ---
+    ("C24", 50, "urbana", "ninguno", 3, None, 41000),      # PMAX válido
+    ("C30", 2, "urbana", "vip", 3, "ENVIO10", 5000),       # mínimo
+    ("C31", 10.1, "urbana", "ninguno", 3, None, 9100),     # float + half-up
+    ("C32", 2, "rural", "frecuente", 6, "ENVIO10", 7900),  # integración
+    ("C33", 10.1, "nacional", "ninguno", 3, None, 12700),  # integración
 ]
 
 
@@ -37,5 +54,5 @@ CASOS_VALIDOS = [
     CASOS_VALIDOS,
     ids=[c[0] for c in CASOS_VALIDOS],
 )
-def test_costo_tramos_y_zonas(cid, peso, zona, cliente, dia, cupon, esperado):
+def test_costos_validos(cid, peso, zona, cliente, dia, cupon, esperado):
     assert calc(peso, zona, cliente, dia, cupon) == esperado
