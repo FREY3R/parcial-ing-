@@ -14,6 +14,8 @@ def calc(p, z, c, d, cup=None, flag=False):
         raise ValueError("peso invalido")
     if z not in ("urbana", "rural", "nacional"):
         raise ValueError("zona inválida")
+    if not isinstance(d, int) or not (1 <= d <= 7):
+        raise ValueError("día inválido")
     if p <= CONFIG["L1"]:
         t = 6000
     elif p <= CONFIG["L2"]:
