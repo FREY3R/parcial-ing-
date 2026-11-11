@@ -35,6 +35,8 @@ def calc(p, z, c, d, cup=None, flag=False):
     if cup != None:
         if cup == "ENVIO10":
             t = t - t * 0.10
+        else:
+            raise ValueError("cupón inválido")
     # fin de semana (E impar: después de descuentos)
     if d >= 6:
         t = t + CONFIG["RECARGO_FINDE"]
