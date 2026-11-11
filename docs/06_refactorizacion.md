@@ -10,7 +10,7 @@ para el cambio `CAMBIO=1` de la Parte 8.
 
 | # | Mal olor (nombre técnico) | Ubicación en v1.0.0 | Deuda técnica | Refactor aplicado |
 |---|---------------------------|---------------------|---------------|-------------------|
-| 1 | Números mágicos (*Magic Numbers*) | `envios.py:16,18,20,24,26,29,31,33,36,38,41` (`6000`, `9000`, `800`, `5000`, `100`, `0.05`, `0.10`) | Cambiar un parámetro exige buscar literales; riesgo de inconsistencia | Constantes nombradas `TARIFA_TRAMO1`, `TARIFA_TRAMO2`, `TARIFA_KG_ADICIONAL`, `MINIMO`, `PASO_REDONDEO`, `DESC_FRECUENTE`, `DESC_CUPON` |
+| 1 | Números mágicos (*Magic Numbers*) | `envios.py:16,18,20,24,26,29,31,33,36,38,41` (`6000`, `9000`, `800`, `5000`, `100`, `0.05`, `0.10`) | Cambiar un parámetro exige buscar literales; riesgo de inconsistencia | Constantes nombradas `COSTO_TRAMO_1`, `COSTO_TRAMO_2`, `COSTO_POR_KG_EXTRA`, `COSTO_MINIMO`, `PASO_REDONDEO`, `DESC_FRECUENTE`, `DESC_CUPON` |
 | 2 | Nombres crípticos (*Poor Naming*) | `envios.py:12` (`p, z, c, d, cup, t`) | Difícil de leer y de mantener | `peso, zona, cliente, dia, cupon, costo` |
 | 3 | Argumento bandera (*Flag Argument*) | `envios.py:12,39-40` (`flag`) | La función tiene dos responsabilidades (calcular e imprimir) | Se elimina `flag`; `calc` no imprime. El `print` pasa al llamador |
 | 4 | Código muerto / sentencia inútil (*Dead Code*) | `envios.py:22` (`t = t`) | Confunde: sugiere una lógica que no existe | Se elimina; `ZonaUrbana.recargo` devuelve el costo sin cambios |

@@ -5,7 +5,8 @@ aritmética Decimal (docs/referencia_calculo.py), NO ejecutando el código hered
 
 Código 0182410093: PMAX=50, L1=3 (incluido), L2=10, RR=15%, RN=40%, V=15%,
 S=2000. D par, E impar (finde después), B impar (ambos descuentos), F impar
-(cupón inexistente = ValueError).
+(cupón inexistente = ValueError). CAMBIO=1 agrega al cliente empresarial (12 %)
+y elimina el recargo de zona cuando el peso supera L2.
 
 Todas las llamadas son posicionales (p, z, c, d, cup) para que la suite siga
 siendo válida después de eliminar el parámetro `flag` en v2.0.0.
@@ -45,7 +46,17 @@ CASOS_VALIDOS = [
     ("C30", 2, "urbana", "vip", 3, "ENVIO10", 5000),       # mínimo
     ("C31", 10.1, "urbana", "ninguno", 3, None, 9100),     # float + half-up
     ("C32", 2, "rural", "frecuente", 6, "ENVIO10", 7900),  # integración
-    ("C33", 10.1, "nacional", "ninguno", 3, None, 12700),  # integración
+    ("C33", 10.1, "nacional", "ninguno", 3, None, 9100),   # CAMBIO=1: sin recargo de zona
+    # --- CAMBIO=1: cliente empresarial (12 %) y sin recargo si peso > L2 ---
+    ("C34", 5, "urbana", "empresarial", 3, None, 7900),        # 9000*0.88
+    ("C35", 5, "urbana", "empresarial", 3, "ENVIO10", 7100),   # 7920*0.90
+    ("C36", 5, "rural", "empresarial", 6, None, 11100),        # 10350*0.88+2000
+    ("C37", 11, "rural", "empresarial", 3, None, 8600),        # sin zona: 9800*0.88
+    ("C38", 11, "nacional", "ninguno", 3, None, 9800),         # sin zona: 9800
+    ("C39", 10, "nacional", "ninguno", 3, None, 12600),        # L2 exacto: sí hay zona
+    ("C40", 10.1, "rural", "ninguno", 3, None, 9100),          # > L2: sin zona
+    ("C41", 5, "urbana", "empresarial", 6, None, 9900),        # 7920+2000
+    ("C42", 2, "urbana", "empresarial", 3, "ENVIO10", 5000),   # mínimo
 ]
 
 
@@ -70,6 +81,8 @@ CASOS_ERROR = [
     ("C27", 5, "urbana", "ninguno", 0, None, "día inválido"),
     ("C28", 5, "urbana", "ninguno", 8, None, "día inválido"),
     ("C29", 5, "urbana", "ninguno", 6.5, None, "día inválido"),
+    ("C43", 5, "urbana", "empresarial", 3, "OTRO", "cupón inválido"),
+    ("C44", 5, "express", "empresarial", 3, None, "zona inválida"),
 ]
 
 
@@ -95,3 +108,9 @@ def test_redondeo_half_up_sube():
 def test_sabado_y_domingo():
     assert calc(5, "urbana", "ninguno", 6, None) == 11000
     assert calc(5, "urbana", "ninguno", 7, None) == 11000
+
+
+def test_cambio_activo():
+    from envios import CAMBIO
+
+    assert CAMBIO == 1
